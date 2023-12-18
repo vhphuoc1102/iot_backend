@@ -1,0 +1,7 @@
+{
+  test: {
+    data: { Humidity: 59, Light: 440, Soil: 894, Temp: 29.4 },
+    devices: { Light: 1, Pump: 1 },
+    mode: 1
+  }
+}

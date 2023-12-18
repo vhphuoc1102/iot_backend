@@ -1,0 +1,6 @@
+module.exports = {
+  ACCESS_TOKEN_SECRET: "tuunguyen99",
+  ACCESS_TOKEN_LIFE_RESET_PASSWORD: "3h",
+  REFRESH_TOKEN_SECRET: "sad",
+  REFRESH_TOKEN_LIFE: "10",
+};
