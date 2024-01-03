@@ -41,6 +41,13 @@ setInterval(() => {
         const device = await DeviceDB.findOne({
           crop: devices[i],
         });
+        const deviceData = await DeviceDB.findOneAndUpdate(
+          {
+            crop: devices[i],
+          },
+          { $push: { data: realtime } }
+        );
+
         var now = new Date();
         var hour = now.getHours();
         var auto = { light: null, pump: null };
