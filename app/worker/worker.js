@@ -88,6 +88,6 @@ setInterval(() => {
       console.log(err);
     }
   });
-}, 500);
+}, 5000);
 
 // node --max-old-space-size=8192 ./app/worker/worker.js
