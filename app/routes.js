@@ -84,6 +84,12 @@ router.post(
   middleWare.isAuth,
   device.getDeviceStatus
 )
+router.post(
+  "/v0/get_data",
+  [body("crop").notEmpty().withMessage("No crop")],
+  middleWare.isAuth,
+  device.getData
+)
 
 router.post(
   "/system/get-list-fee",

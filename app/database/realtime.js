@@ -4,7 +4,11 @@ const realTimeSchema = new mongoose.Schema({
    temperature: Number,
    humidity:Number,
    soil:Number,
-   light:Number,
+   night:Number,
+   state: {
+      ledState: Number, 
+      pumpState: Number
+   },
    createAt: { type: Date, default: Date.now },
    updateAt: { type: Date, default: Date.now },
 })

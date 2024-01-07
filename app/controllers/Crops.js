@@ -1,6 +1,4 @@
 const CropsDB = require("../database/crops");
-const RealTimeDB = require("../database/realtime");
-const DeviceDB = require("../database/device");
 module.exports = {
   createCrop: async (req, res, next) => {
     try {

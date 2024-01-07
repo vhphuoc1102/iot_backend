@@ -20,14 +20,17 @@ setInterval(() => {
       let data = JSON.parse(JSON.stringify(snapshot));
       console.log(data);
       let devices = Object.keys(data);
-      console.log(devices);
       let value = Object.values(data);
       for (let i = 0; i < devices.length; i++) {
         realtime = {
           humidity: value[i].data.Humidity,
-          light: value[i].data.Light,
+          night: value[i].data.Night,
           temperature: value[i].data.Temp,
           soil: value[i].data.Soil,
+          state: {
+            ledState: value[i].data.State.LedState,
+            pumpState: value[i].data.State.PumpState,
+          },
         };
         const result = await RealTimeDB.findOneAndUpdate(
           { crop: devices[i] },
@@ -47,31 +50,36 @@ setInterval(() => {
           },
           { $push: { data: realtime } }
         );
-
-        var now = new Date();
-        var hour = now.getHours();
-        var auto = { light: null, pump: null };
-        if (device.mode === 0) {
-          if (hour >= 6 && hour < 6 + lightingTime) {
-            auto = { ...auto, light: 1 };
-          } else {
-            auto = { ...auto, light: 0 };
-          }
-          if (value[i].data.Soil > 500) {
-            auto = { ...auto, pump: 1 };
-          } else {
-            auto = { ...auto, pump: 0 };
-          }
-          const setAuto = await DeviceDB.findOneAndUpdate(
+        if (deviceData.data.length > 25) {
+          await DeviceDB.updateOne(
             { crop: devices[i] },
-            auto
+            { $push: { data: { $each: [], $slice: -5 } } }
           );
         }
+        // var now = new Date();
+        // var hour = now.getHours();
+        // var auto = { light: null, pump: null };
+        // if (device.mode === 0) {
+        //   if (hour >= 6 && hour < 6 + lightingTime) {
+        //     auto = { ...auto, light: 1 };
+        //   } else {
+        //     auto = { ...auto, light: 0 };
+        //   }
+        //   if (value[i].data.Soil > 500) {
+        //     auto = { ...auto, pump: 1 };
+        //   } else {
+        //     auto = { ...auto, pump: 0 };
+        //   }
+        //   const setAuto = await DeviceDB.findOneAndUpdate(
+        //     { crop: devices[i] },
+        //     auto
+        //   );
+        // }
         const d = await DeviceDB.findOne({
           crop: devices[i],
         });
         var updates = {};
-        updates["/" + devices[i] + "/devices/Light"] = d.light;
+        updates["/" + devices[i] + "/devices/Led"] = d.led;
         updates["/" + devices[i] + "/devices/Pump"] = d.pump;
         updates["/" + devices[i] + "/mode"] = d.mode;
         database.ref().update(updates);
@@ -80,6 +88,6 @@ setInterval(() => {
       console.log(err);
     }
   });
-}, 1000);
+}, 500);
 
 // node --max-old-space-size=8192 ./app/worker/worker.js
